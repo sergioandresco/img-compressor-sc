@@ -1,6 +1,6 @@
 # img-compressor-sc
 
-![img-compressor-sc logo](assets/img/img-compressor-sc.jpg)
+![img-compressor-sc logo](assets/img/img-compressor-sc.png)
 
 ## Easy images compressor for to use
 
