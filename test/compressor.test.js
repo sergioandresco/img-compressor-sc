@@ -5,7 +5,7 @@ const { compressImage } = require('../src/index'); // Adjust this path to your l
 (async () => {
     try {
         // Path to the input image
-        const inputImage = path.join(__dirname, 'test.jpg'); // Replace with your image file
+        const inputImage = path.join(__dirname, 'img-compressor-sc.png'); // Replace with your image file
 
         console.log(`Original Image: ${inputImage}`);
 
