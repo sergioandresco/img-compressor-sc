@@ -5,18 +5,10 @@ const path = require('path');
  * @param {string} filePath - File path.
  * @returns {string} - File extension.
  */
+
+//This function is used to extracts the file extension
 function getFileExtension(filePath) {
     return path.extname(filePath).replace('.', '');
 }
 
-/**
- * Generate an output path for the compressed image.
- * @param {string} inputPath - Input file path.
- * @returns {string} - Output file path.
- */
-function generateOutputPath(inputPath) {
-    const { dir, name, ext } = path.parse(inputPath);
-    return path.join(dir, `${name}-compressed${ext}`);
-}
-
-module.exports = { getFileExtension, generateOutputPath };
+module.exports = { getFileExtension };

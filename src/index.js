@@ -1,8 +1,13 @@
+/**
+ * img-compressor-sc library created by Sergio Andres Cobos Suarez from Colombia
+ * The code is life
+ */
+
 const jpegCompressor = require('./compressors/jpegCompressor');
 const pngCompressor = require('./compressors/pngCompressor');
 const webpCompressor = require('./compressors/webpCompressor');
 const svgCompressor = require('./compressors/svgCompressor');
-const { getFileExtension, generateOutputPath } = require('./utils/fileUtils');
+const { getFileExtension } = require('./utils/fileUtils');
 
 /**
  * Compress an image based on its type.
@@ -10,30 +15,23 @@ const { getFileExtension, generateOutputPath } = require('./utils/fileUtils');
  * @param {number} quality - Compression quality (1-100, default: 80).
  * @returns {Promise<string>} - Path to the compressed image.
  */
+
+//This is the principal file where it call all compressor Js files for select the file for to use
 async function compressImage(inputPath, quality = 80) {
     const extension = getFileExtension(inputPath).toLowerCase();
-    const outputPath = generateOutputPath(inputPath);
 
-    if (quality < 1 || quality > 100) {
-        throw new Error(`Quality must be between 1 and 100. Received: ${quality}`);
-    }
-
-    try {
-        switch (extension) {
-            case 'jpg':
-            case 'jpeg':
-                return await jpegCompressor(inputPath, outputPath, quality);
-            case 'png':
-                return await pngCompressor(inputPath, outputPath, quality);
-            case 'webp':
-                return await webpCompressor(inputPath, outputPath, quality);
-            case 'svg':
-                return await svgCompressor(inputPath, outputPath);
-            default:
-                throw new Error(`Unsupported file type: ${extension}`);
-        }
-    } catch (error) {
-        throw new Error(`Error compressing ${inputPath}: ${error.message}`);
+    switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+            return await jpegCompressor(inputPath, quality);
+        case 'png':
+            return await pngCompressor(inputPath, quality);
+        case 'webp':
+            return await webpCompressor(inputPath, quality);
+        case 'svg':
+            return await svgCompressor(inputPath);
+        default:
+            throw new Error(`Unsupported file type: ${extension}`);
     }
 }
 

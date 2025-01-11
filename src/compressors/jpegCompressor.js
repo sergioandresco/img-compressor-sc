@@ -3,16 +3,19 @@ const sharp = require('sharp');
 /**
  * Compress JPEG image.
  * @param {string} inputPath - Path to the input image.
- * @param {string} outputPath - Path to save the compressed image.
  * @param {number} quality - Compression quality (1-100).
  * @returns {Promise<string>} - Path to the compressed image.
  */
-async function jpegCompressor(inputPath, outputPath, quality) {
+
+//This is a function for compress images with jpeg or jpg extension
+async function jpegCompressor(inputPath, quality) {
     try {
-        await sharp(inputPath).jpeg({ quality }).toFile(outputPath);
-        return outputPath;
+        const buffer = await sharp(inputPath)
+            .jpeg({ quality })
+            .toBuffer();
+        return buffer;
     } catch (error) {
-        throw new Error(`JPEG compression failed: ${error.message}`);
+        throw new Error(`Error compressing JPEG: ${error.message}`);
     }
 }
 

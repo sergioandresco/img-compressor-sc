@@ -4,16 +4,30 @@ const { optimize } = require('svgo');
 /**
  * Compress an SVG file.
  * @param {string} inputPath - Path to the input SVG file.
- * @param {string} outputPath - Path to save the compressed SVG file.
- * @returns {Promise<void>}
+ * @returns {Promise<Buffer>} - Optimized SVG content as a Buffer.
  */
-async function svgCompressor(inputPath, outputPath) {
-    const svgContent = fs.readFileSync(inputPath, 'utf-8');
-    const optimizedSvg = optimize(svgContent, {
-        multipass: true, // Optimize multiple times for better results
-    }).data;
 
-    fs.writeFileSync(outputPath, optimizedSvg);
+//This is a function for compress images with svg extension
+//SVG is a vector format, so, this need svgo for manipulate the vectors
+async function svgCompressor(inputPath) {
+    try {
+        // Read the input SVG file
+        const svgContent = fs.readFileSync(inputPath, 'utf-8');
+
+        // Optimize the SVG content
+        const optimizedSvg = optimize(svgContent, {
+            multipass: true, // Optimize multiple times for better results
+        });
+
+        if (optimizedSvg.error) {
+            throw new Error(optimizedSvg.error);
+        }
+
+        // Convert optimized SVG string to a Buffer
+        return Buffer.from(optimizedSvg.data, 'utf-8');
+    } catch (error) {
+        throw new Error(`Error compressing SVG: ${error.message}`);
+    }
 }
 
 module.exports = svgCompressor;

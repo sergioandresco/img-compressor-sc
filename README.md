@@ -4,7 +4,7 @@
 
 ## Easy images compressor for to use
 
-img-compressor-sc is a library in Node.js for compress images by URL and images in local location in live time.
+img-compressor-sc is a library in Node.js for compress images in local location in live time.
 
 > You can use this library for compress differents image types in live time to make your 
 > project more light.
@@ -22,9 +22,7 @@ This library solve that problem with your funcionalities which help us to compre
 | 1 | `JPEG / JPG` |
 | 2 | `PNG`        |
 | 3 | `WebP`       |
-| 4 | `TIFF`       |
-| 5 | `AVIF`       |
-| 6 | `SVG`        |
+| 4 | `SVG`        |
 
 Note: In the SVG format is manipulation of vector, not compression.
 
@@ -39,7 +37,7 @@ npm install img-compressor-sc
 After installation, you need import the components.
 
 ```js
-import { compressImage, compressImagesSync } from ‘img-compressor-sc’;
+import { compressImage } from ‘img-compressor-sc’;
 ```
 
 ## Usage and Examples
@@ -47,100 +45,34 @@ import { compressImage, compressImagesSync } from ‘img-compressor-sc’;
 ### React
 
 ```jsx
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { compressImage } from 'img-compressor-sc';
 
 const App = () => {
-  const [compressedUrlImage, setCompressedUrlImage] = useState(null);
-  const [compressedLocalImage, setCompressedLocalImage] = useState(null);
+  const [compressedImage, setCompressedImage] = useState(null);
 
-  useEffect(() => {
-    const jpgUrl = 'https://img.freepik.com/foto-gratis/montanas-vestrahorn-stokksnes-islandia_335224-667.jpg';
-    const localImagePath = './img/test.jpg';
+  const handleCompress = async () => {
+    const localImagePath = './test.jpg';
 
-    const compressImages = async () => {
-      // Compress img from URL
-      const compressedFromUrl = await compressImage(jpgUrl, { quality: 80 });
-      setCompressedUrlImage(URL.createObjectURL(new Blob([compressedFromUrl])));
-
-      // Compress local img
-      const response = await fetch(localImagePath);
-      const imageBuffer = await response.arrayBuffer();
-      const compressedFromLocal = await compressImage(imageBuffer, { quality: 80 });
-      setCompressedLocalImage(URL.createObjectURL(new Blob([compressedFromLocal])));
-    };
-
-    compressImages();
-  }, []);
+    try {
+      const compressedBuffer = await compressImage(localImagePath, 75);
+      const base64Image = `data:image/jpeg;base64,${compressedBuffer.toString('base64')}`;
+      setCompressedImage(base64Image);
+    } catch (error) {
+      console.error('Error compressing image:', error.message);
+    }
+  };
 
   return (
     <div>
-      <div>
-        <h3>Imagen Comprimida desde URL</h3>
-        {compressedUrlImage ? <img src={compressedUrlImage} alt="Compressed from URL" /> : <p>Loading...</p>}
-      </div>
-      <div>
-        <h3>Imagen Comprimida desde Archivo Local</h3>
-        {compressedLocalImage ? <img src={compressedLocalImage} alt="Compressed from Local" /> : <p>Loading...</p>}
-      </div>
+      <h1>Image Compressor</h1>
+      <button onClick={handleCompress}>Compress Image</button>
+      {compressedImage && <img src={compressedImage} alt="Compressed" />}
     </div>
   );
 };
 
 export default App;
-```
-
-### VUE
-
-```js
-<template>
-  <div>
-    <div>
-      <h3>Compress img from URL</h3>
-      <img v-if="compressedUrlImage" :src="compressedUrlImage" alt="Compressed from URL" />
-      <p v-else>Loading...</p>
-    </div>
-    <div>
-      <h3>Compress local img</h3>
-      <img v-if="compressedLocalImage" :src="compressedLocalImage" alt="Compressed from Local" />
-      <p v-else>Loading...</p>
-    </div>
-  </div>
-</template>
-
-<script>
-
-import { compressImage } from 'img-compressor-sc';
-
-export default {
-  data() {
-    return {
-      compressedUrlImage: null,
-      compressedLocalImage: null
-    };
-  },
-  mounted() {
-    const jpgUrl = 'https://img.freepik.com/foto-gratis/montanas-vestrahorn-stokksnes-islandia_335224-667.jpg';
-    const localImagePath = './img/test.jpg';
-
-    const compressImages = async () => {
-      // Compress img from URL
-      const compressedFromUrl = await compressImage(jpgUrl, { quality: 80 });
-      const urlBlob = new Blob([compressedFromUrl]);
-      this.compressedUrlImage = URL.createObjectURL(urlBlob);
-
-      // Compress local img
-      const response = await fetch(localImagePath);
-      const imageBuffer = await response.arrayBuffer();
-      const compressedFromLocal = await compressImage(imageBuffer, { quality: 80 });
-      const localBlob = new Blob([compressedFromLocal]);
-      this.compressedLocalImage = URL.createObjectURL(localBlob);
-    };
-
-    compressImages();
-  }
-};
-</script>
 ```
 
 ### JS Vainilla
@@ -155,39 +87,17 @@ export default {
   <script src="path/to/img-compressor-sc.js"></script>
 </head>
 <body>
-  <div id="app">
-    <p>Loading...</p>
-  </div>
-
+  <h1>Image Compressor Example</h1>
   <script>
-    const app = document.getElementById('app');
-    const jpgUrl = 'https://img.freepik.com/foto-gratis/montanas-vestrahorn-stokksnes-islandia_335224-667.jpg';
-    const localImagePath = './img/test.jpg';
-
-    async function compressImages() {
-      // Compress img from URL
-      const compressedFromUrl = await imgCompressorSc.compressImage(jpgUrl, { quality: 80 });
-      const urlBlob = new Blob([compressedFromUrl]);
-      const urlImage = URL.createObjectURL(urlBlob);
-
-      // Compress local img
-      const response = await fetch(localImagePath);
-      const imageBuffer = await response.arrayBuffer();
-      const compressedFromLocal = await imgCompressorSc.compressImage(imageBuffer, { quality: 80 });
-      const localBlob = new Blob([compressedFromLocal]);
-      const localImage = URL.createObjectURL(localBlob);
-
-      // Render both images
-      app.innerHTML = `
-        <h3>Img compress from URL</h3>
-        <img src="${urlImage}" alt="Compressed from URL" />
-        <h3>Img compress from local files</h3>
-        <img src="${localImage}" alt="Compressed from Local" />
-      `;
+    async function compressImageExample() {
+      const compressedBuffer = await imgCompressorSc.compressImage('./test.jpg', 75);
+      const base64Image = `data:image/jpeg;base64,${compressedBuffer.toString('base64')}`;
+      document.getElementById('result').src = base64Image;
     }
 
-    compressImages();
+    compressImageExample();
   </script>
+  <img id="result" />
 </body>
 </html>
 ```
