@@ -24,6 +24,9 @@ This library solve that problem with your funcionalities which help us to compre
 | 3 | `WebP`       |
 | 4 | `SVG`        |
 
+| hola | 1 | 2 |
+| 1 | 2 | 2 |
+
 Note: In the SVG format is manipulation of vector, not compression.
 
 ## Installation
